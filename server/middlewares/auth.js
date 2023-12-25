@@ -12,3 +12,14 @@ export const isAuthenticated = catchAsyncError(async (req, res, next) => {
   req.user = await User.findById(decoded._id);
   next();
 });
+
+export const authorizeAdmin = catchAsyncError(async (req, res, next) => {
+  if (req.user.role !== "admin")
+    return next(
+      new ErrorHandler(
+        `${req.user.role} is not authorized to access this resourse`,
+        403
+      )
+    );
+  next();
+});
