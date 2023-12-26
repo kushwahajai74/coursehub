@@ -6,12 +6,19 @@ import cloudinary from "cloudinary";
 
 //get all courses
 export const getCourses = catchAsyncError(async (req, res, next) => {
-  const courses = await Course.find().select("-lectures");
+  const keyword = req.query.keyword || "";
+  const category = req.query.category || "";
+
+  const courses = await Course.find({
+    title: { $regex: keyword, $options: "i" },
+    category: { $regex: category, $options: "i" },
+  }).select("-lectures");
   res.status(200).json({
     success: true,
     courses,
   });
 });
+
 //create course
 export const createCourse = catchAsyncError(async (req, res, next) => {
   const { title, description, category, createdBy } = req.body;
