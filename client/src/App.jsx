@@ -9,7 +9,7 @@ import Register from "./components/Auth/Register";
 import ForgetPassword from "./components/Auth/ForgetPassword";
 import ResetPassword from "./components/Auth/ResetPassword";
 import Contact from "./components/Contact/Contact";
-import Request from "./components/Request/request";
+import Request from "./components/Request/Request";
 import Subscribe from "./components/Payments/Subscribe";
 import PaymentSuccess from "./components/Payments/PaymentSuccess";
 import PaymentFail from "./components/Payments/PaymentFail";
