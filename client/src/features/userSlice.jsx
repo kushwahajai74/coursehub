@@ -22,6 +22,7 @@ const login = createAsyncThunk("user/login", async (params, thunkAPI) => {
         withCredentials: true,
       }
     );
+    console.log(data);
     return data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data);
