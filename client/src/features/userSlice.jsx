@@ -19,7 +19,7 @@ const login = createAsyncThunk("user/login", async (params, thunkAPI) => {
         headers: {
           "Content-type": "application/json",
         },
-        withCredentials: true,
+        withCredentials: "true",
       }
     );
     console.log(data);
