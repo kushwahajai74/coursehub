@@ -3,12 +3,18 @@ import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
 import { ChakraProvider, theme } from "@chakra-ui/react";
-// import theme from "./theme.jsx";
+import { Provider } from "react-redux";
+import store from "./redux/store.js";
+import axios from "axios";
+
+axios.defaults.baseURL = "http://localhost:3000/api/v1";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ChakraProvider theme={theme}>
-      <App />
-    </ChakraProvider>
+    <Provider store={store}>
+      <ChakraProvider theme={theme}>
+        <App />
+      </ChakraProvider>
+    </Provider>
   </React.StrictMode>
 );

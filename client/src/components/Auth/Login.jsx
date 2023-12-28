@@ -8,16 +8,26 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { login } from "../../features/userSlice";
 
 const Login = () => {
+  const dispatch = useDispatch();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(login({ email, password }));
+  };
+
   return (
     <Container h={"95vh"}>
       <VStack height={"full"} justifyContent={"center"}>
         <Heading children={"Welcome to Course Bundler"} />
-        <form style={{ width: "100%" }}>
+        <form style={{ width: "100%" }} onSubmit={handleSubmit}>
           <Box my={4}>
             <FormLabel htmlFor="Email" children="Email Address" />
             <Input
@@ -52,7 +62,7 @@ const Login = () => {
               </Button>
             </Link>
           </Box>
-          <Button my={4} colorScheme={"yellow"}>
+          <Button my={4} colorScheme={"yellow"} type="submit">
             Login
           </Button>
           <Box my={4}>

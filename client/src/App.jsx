@@ -22,15 +22,38 @@ import Dashboard from "./components/Admin/Dashboard/Dashboard";
 import CreateCourse from "./components/Admin/CreateCourse/CreateCourse";
 import Users from "./components/Admin/Users/Users";
 import AdminCourses from "./components/Admin/AdminCourses/AdminCourses";
+import toast, { Toaster } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { clearError, clearMessage } from "./features/userSlice";
 
 function App() {
   // window.addEventListener("contextmenu", (e) => {
   //   e.preventDefault();
   // });
+  const dispatch = useDispatch();
+  const { isAuthenticated, user, error, message } = useSelector(
+    (state) => state.user
+  );
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch(clearError());
+    }
+  }, [error, dispatch]);
+
+  useEffect(() => {
+    if (message) {
+      toast.success(message);
+      dispatch(clearMessage());
+    }
+  }, [message, dispatch]);
+
   return (
     <>
       <Router>
-        <Header />
+        <Header isAuthenticated={isAuthenticated} user={user} />
         <Routes>
           {/* home route */}
           <Route path="/" element={<Home />} />
@@ -60,6 +83,7 @@ function App() {
         </Routes>
       </Router>
       <Footer />
+      <Toaster />
     </>
   );
 }
