@@ -72,13 +72,13 @@ export const logout = catchAsyncError(async (req, res, next) => {
       message: "Logged Out Successfully",
     });
 
+  res.status(statusCode);
   res
-    .status(statusCode)
-    .cookie("token", "", {
-      expires: new Date(Date.now()),
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production" ? true : false,
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    .clearCookie("token", {
+      expires: new Date(0), // Set the expiration date to the past
+      httpOnly: true, // Ensure the cookie is accessible only by the server
+      secure: true, // Send the cookie only over HTTPS (if your site is served over HTTPS)
+      sameSite: "None", // Allow cross-site requests
     })
     .json({
       success: true,
