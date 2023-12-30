@@ -59,18 +59,22 @@ export const login = catchAsyncError(async (req, res, next) => {
 
 //Logout
 export const logout = catchAsyncError(async (req, res, next) => {
-  res
-    .status(200)
-    .cookie("token", "", {
-      expires: new Date(Date.now()),
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production" ? true : false,
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    })
-    .json({
-      success: true,
-      message: "Logged Out Successfully",
-    });
+  // res
+  //   .status(200)
+  //   .cookie("token", "", {
+  //     expires: new Date(Date.now()),
+  //     httpOnly: true,
+  //     secure: process.env.NODE_ENV === "production" ? true : false,
+  //     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  //   })
+  //   .json({
+  //     success: true,
+  //     message: "Logged Out Successfully",
+  //   });
+  res.status(200).clearCookie("token").json({
+    success: true,
+    message: "Logged Out Successfully",
+  });
 });
 
 //Get my profile

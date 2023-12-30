@@ -26,7 +26,7 @@ const login = createAsyncThunk("user/login", async (params, thunkAPI) => {
     return data;
   } catch (error) {
     return thunkAPI.rejectWithValue(
-      error.response.data.message ? error.response.data.message : error.message
+      error.response.data ? error.response.data : error.message
     );
   }
 });
