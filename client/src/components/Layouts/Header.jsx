@@ -1,3 +1,4 @@
+import { useDispatch } from "react-redux";
 import React from "react";
 import { ColorModeSwitcher } from "../../colourModeSwitcher";
 import {
@@ -15,6 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { RiDashboardFill, RiLogoutBoxLine, RiMenu5Fill } from "react-icons/ri";
 import { Link } from "react-router-dom";
+import { logout } from "../../features/userSlice";
 
 const LinkButton = ({ url, title, onClose }) => (
   <Link onClick={onClose} to={url}>
@@ -22,8 +24,9 @@ const LinkButton = ({ url, title, onClose }) => (
   </Link>
 );
 const Header = ({ isAuthenticated = false, user }) => {
+  const dispatch = useDispatch();
   const logoutHandler = () => {
-    return console.log("logout");
+    dispatch(logout());
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure();

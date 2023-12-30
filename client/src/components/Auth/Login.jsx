@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import {
   Box,
   Button,
@@ -7,6 +9,7 @@ import {
   Input,
   VStack,
 } from "@chakra-ui/react";
+import Loader from "../Layouts/Loader";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
@@ -14,6 +17,9 @@ import { login } from "../../features/userSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { isAuthenticated, isLoading } = useSelector((state) => state.user);
+  if (isAuthenticated === true) navigate("/profile");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,7 +29,9 @@ const Login = () => {
     dispatch(login({ email, password }));
   };
 
-  return (
+  return isLoading ? (
+    <Loader />
+  ) : (
     <Container h={"95vh"}>
       <VStack height={"full"} justifyContent={"center"}>
         <Heading children={"Welcome to Course Bundler"} />

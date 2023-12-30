@@ -25,7 +25,9 @@ import AdminCourses from "./components/Admin/AdminCourses/AdminCourses";
 import toast, { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { clearError, clearMessage } from "./features/userSlice";
+import { clearError, clearMessage, getMyProfile } from "./features/userSlice";
+import ProtectedRoute from "./Routes/ProtectedRoutes";
+import { Container, Spinner } from "@chakra-ui/react";
 
 function App() {
   // window.addEventListener("contextmenu", (e) => {
@@ -50,6 +52,10 @@ function App() {
     }
   }, [message, dispatch]);
 
+  useEffect(() => {
+    dispatch(getMyProfile());
+  }, [dispatch]);
+
   return (
     <>
       <Router>
@@ -65,15 +71,19 @@ function App() {
           <Route path="/resetpassword/:token" element={<ResetPassword />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/request" element={<Request />} />
+
           {/* payement routes */}
-          <Route path="/subscribe" element={<Subscribe />} />
-          <Route path="/paymentsuccess" element={<PaymentSuccess />} />
-          <Route path="/paymentfail" element={<PaymentFail />} />
-          <Route path="/course/:id" element={<CoursePage />} />
-          {/* profile routes */}
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/updateprofile" element={<UpdateProfile />} />
-          <Route path="/changepassword" element={<ChangePassword />} />
+          <Route path="/" element={<ProtectedRoute />}>
+            <Route path="/subscribe" element={<Subscribe />} />
+            <Route path="/paymentsuccess" element={<PaymentSuccess />} />
+            <Route path="/paymentfail" element={<PaymentFail />} />
+            <Route path="/course/:id" element={<CoursePage />} />
+            {/* profile routes */}
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/updateprofile" element={<UpdateProfile />} />
+            <Route path="/changepassword" element={<ChangePassword />} />
+          </Route>
+
           {/* admin routes*/}
           <Route path="/admin/dashboard" element={<Dashboard />} />
           <Route path="/admin/courses" element={<AdminCourses />} />
