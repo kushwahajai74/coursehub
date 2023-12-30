@@ -8,6 +8,7 @@ import store from "./redux/store.js";
 import axios from "axios";
 
 axios.defaults.baseURL = "https://coursehub-api.vercel.app/api/v1";
+// axios.defaults.baseURL = "http://localhost:3000/api/v1";
 axios.defaults.withCredentials = true;
 
 ReactDOM.createRoot(document.getElementById("root")).render(
