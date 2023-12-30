@@ -1,13 +1,20 @@
 import { Button, Container, Heading, Input, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import React from "react";
+import { useDispatch } from "react-redux";
+import { updateProfile } from "../../features/userSlice";
 
 const UpdateProfile = () => {
+  const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(updateProfile(name, email));
+  };
   return (
     <Container minH={"95vh"} py={16}>
-      <form>
+      <form onSubmit={handleSubmit}>
         <Heading
           my={16}
           children="update Profile"

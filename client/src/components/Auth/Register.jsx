@@ -8,8 +8,10 @@ import {
   Input,
   VStack,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { register } from "../../features/userSlice";
 
 export const fileExportCss = {
   cursor: "pointer",
@@ -23,6 +25,8 @@ export const fileExportCss = {
 };
 
 const Register = () => {
+  const dispatch = useDispatch();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -45,6 +49,18 @@ const Register = () => {
     };
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("file", image);
+
+    dispatch(register(formData));
+  };
+
   return (
     <Container h={"95vh"}>
       <VStack
@@ -54,7 +70,7 @@ const Register = () => {
         marginTop={"2rem"}
       >
         <Heading textTransform={"uppercase"} children={"Registration"} />
-        <form style={{ width: "100%" }}>
+        <form onSubmit={handleSubmit} style={{ width: "100%" }}>
           <Box display={"flex"} justifyContent={"center"}>
             <Avatar size={"2xl"} src={imagePrev} />
           </Box>
@@ -118,7 +134,7 @@ const Register = () => {
               </Button>
             </Link>
           </Box>
-          <Button my={4} colorScheme={"yellow"}>
+          <Button my={4} colorScheme={"yellow"} type="submit">
             Sign Up
           </Button>
           <Box my={4}>

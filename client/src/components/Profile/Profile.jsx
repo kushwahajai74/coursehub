@@ -22,39 +22,25 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { RiDeleteBin7Fill } from "react-icons/ri";
 import { fileExportCss } from "../Auth/Register";
+import { updateProfilePicture } from "../../features/userSlice";
+import { useDispatch } from "react-redux";
 
-const Profile = () => {
+const Profile = ({ user }) => {
+  const dispatch = useDispatch();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const user = {
-    name: "John Doe",
-    email: "johndoe@email.com",
-    createdAt: String(new Date().toISOString()),
-    subscription: {
-      status: "active",
-    },
-    role: "user",
-    playlist: [
-      {
-        course: "dskakajsadsa",
-        poster: "sdadadasd",
-      },
-      {
-        course: "dskakajsad",
-        poster: "sdadadasd",
-      },
-      {
-        course: "dskakaj",
-        poster: "sdadadasd",
-      },
-    ],
-  };
+
   const removeFromPlaylistHandler = (id) => {
     console.log(id);
   };
+
   const channgeImageSubmitHandler = (e, image) => {
     e.preventDefault();
-    console.log(image);
+    const formData = new FormData();
+    formData.append("file", image);
+    dispatch(updateProfilePicture(formData));
   };
+
   return (
     <Container minH={"95vh"} maxW={"container.lg"}>
       <Heading children={"PROFILE"} m={8} />
@@ -66,7 +52,7 @@ const Profile = () => {
         padding={8}
       >
         <VStack>
-          <Avatar boxSize={"48"} />
+          <Avatar boxSize={"48"} src={user.avatar.url} />
           <Button variant={"ghost"} colorScheme={"yellow"} onClick={onOpen}>
             Change Photo
           </Button>

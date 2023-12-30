@@ -102,10 +102,21 @@ export const deleteAccount = catchAsyncError(async (req, res, next) => {
 
 //Change password
 export const changePassword = catchAsyncError(async (req, res, next) => {
-  const { oldPassword, newPassword } = req.body;
-  if (!oldPassword || !newPassword) {
+  const { oldPassword, newPassword, confirmPassword } = req.body;
+  console.log(req.body);
+  if (!oldPassword || !newPassword || !confirmPassword) {
     return next(new ErrorHandler("Please enter all fields", 400));
   }
+  if (newPassword !== confirmPassword)
+    return next(new ErrorHandler("Password does not match", 400));
+  if (newPassword.length < 6)
+    return next(
+      new ErrorHandler("Password must be at least 6 characters", 400)
+    );
+  if (oldPassword === newPassword)
+    return next(
+      new ErrorHandler("New password cannot be same as old password", 400)
+    );
 
   const user = await User.findById(req.user._id).select("+password");
   const isMatched = await user.comparePassword(oldPassword);

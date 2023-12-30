@@ -1,16 +1,43 @@
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { Button, Container, Heading, Input, VStack } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
+import {
+  changePassword,
+  clearError,
+  clearMessage,
+} from "../../features/userSlice";
+import toast from "react-hot-toast";
 
 const ChangePassword = () => {
+  const dispatch = useDispatch();
+  const { error, isLoading, message } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  // useEffect(() => {
+  //   if (error) {
+  //     toast.error(error);
+  //     dispatch(clearError());
+  //   }
+  //   if (message) {
+  //     toast.success(message);
+  //     dispatch(clearMessage());
+  //     navigate("/profile");
+  //   }
+  // }, [error, message, navigate]);
+
   const [oldPassword, setOldPassword] = React.useState("");
   const [newPassword, setNewPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
 
-  const handleSubmit = () => {};
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(changePassword({ oldPassword, newPassword, confirmPassword }));
+  };
 
   return (
     <Container minH={"95vh"} py={"16"}>
-      <form>
+      <form onSubmit={handleSubmit}>
         <Heading
           children="Update Password"
           textTransform={"uppercase"}
@@ -42,7 +69,13 @@ const ChangePassword = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
             focusBorderColor="yellow.500"
           />
-          <Button w={"full"} mt={4} colorScheme={"yellow"} type="submit">
+          <Button
+            isLoading={isLoading}
+            w={"full"}
+            mt={4}
+            colorScheme={"yellow"}
+            type="submit"
+          >
             Change
           </Button>
         </VStack>
