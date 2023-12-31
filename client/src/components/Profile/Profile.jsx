@@ -18,27 +18,46 @@ import {
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { RiDeleteBin7Fill } from "react-icons/ri";
 import { fileExportCss } from "../Auth/Register";
-import { updateProfilePicture } from "../../features/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  clearError,
+  clearMessage,
+  updateProfilePicture,
+} from "../../features/profileSlice";
+import toast from "react-hot-toast";
+import { getMyProfile } from "../../features/userSlice";
 
 const Profile = ({ user }) => {
   const dispatch = useDispatch();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const { isLoading, error, message } = useSelector((state) => state.profile);
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch(clearError());
+    }
+    if (message) {
+      toast.success(message);
+      dispatch(clearMessage());
+    }
+  }, [error, message, dispatch]);
+
   const removeFromPlaylistHandler = (id) => {
     console.log(id);
   };
 
-  const channgeImageSubmitHandler = (e, image) => {
+  const channgeImageSubmitHandler = async (e, image) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("file", image);
-    dispatch(updateProfilePicture(formData));
+    await dispatch(updateProfilePicture(formData));
+    dispatch(getMyProfile());
   };
 
   return (
@@ -132,13 +151,14 @@ const Profile = ({ user }) => {
         isOpen={isOpen}
         onClose={onClose}
         channgeImageSubmitHandler={channgeImageSubmitHandler}
+        isLoading={isLoading}
       />
     </Container>
   );
 };
 
 export default Profile;
-function BasicUsage({ isOpen, onClose, channgeImageSubmitHandler }) {
+function BasicUsage({ isOpen, onClose, channgeImageSubmitHandler, isLoading }) {
   const [image, setImage] = useState("");
   const [imagePrev, setImagePrev] = useState("");
   const changeImage = (e) => {
@@ -168,7 +188,12 @@ function BasicUsage({ isOpen, onClose, channgeImageSubmitHandler }) {
                 css={{ "&::file-selector-button": fileExportCss }}
                 onChange={changeImage}
               />
-              <Button w={"full"} colorScheme={"yellow"} type="submit">
+              <Button
+                w={"full"}
+                colorScheme={"yellow"}
+                type="submit"
+                isLoading={isLoading}
+              >
                 Change
               </Button>
             </VStack>

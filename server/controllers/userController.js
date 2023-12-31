@@ -103,7 +103,7 @@ export const deleteAccount = catchAsyncError(async (req, res, next) => {
 //Change password
 export const changePassword = catchAsyncError(async (req, res, next) => {
   const { oldPassword, newPassword, confirmPassword } = req.body;
-  console.log(req.body);
+
   if (!oldPassword || !newPassword || !confirmPassword) {
     return next(new ErrorHandler("Please enter all fields", 400));
   }
@@ -182,7 +182,7 @@ export const forgetPassword = catchAsyncError(async (req, res, next) => {
   const resetToken = user.getResetPasswordToken();
   await user.save();
 
-  const url = `${process.env.FRONTEND_URL}/resettoken/${resetToken}
+  const url = `${process.env.FRONTEND_URL}/resetpassword/${resetToken}
 `;
 
   const message = `
@@ -214,7 +214,19 @@ export const resetPassword = catchAsyncError(async (req, res, next) => {
   if (!user)
     return next(new ErrorHandler("Token is invalid or has expired", 400));
 
-  user.password = req.body.password;
+  const { password, confirmPassword } = req.body;
+  if (!password || !confirmPassword)
+    return next(new ErrorHandler("Please enter all fields", 400));
+
+  if (password !== confirmPassword)
+    return next(new ErrorHandler("Password does not match", 400));
+  if (password.length < 6)
+    return next(
+      new ErrorHandler("Password must be at least 6 characters", 400)
+    );
+
+  user.password = password;
+
   user.resetPasswordToken = undefined;
   user.resetPasswordExpire = undefined;
   await user.save();

@@ -3,28 +3,30 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Button, Container, Heading, Input, VStack } from "@chakra-ui/react";
 import React, { useEffect } from "react";
+
+import toast from "react-hot-toast";
 import {
   changePassword,
   clearError,
   clearMessage,
-} from "../../features/userSlice";
-import toast from "react-hot-toast";
+} from "../../features/profileSlice";
 
 const ChangePassword = () => {
   const dispatch = useDispatch();
-  const { error, isLoading, message } = useSelector((state) => state.user);
+  const { error, isLoading, message } = useSelector((state) => state.profile);
   const navigate = useNavigate();
-  // useEffect(() => {
-  //   if (error) {
-  //     toast.error(error);
-  //     dispatch(clearError());
-  //   }
-  //   if (message) {
-  //     toast.success(message);
-  //     dispatch(clearMessage());
-  //     navigate("/profile");
-  //   }
-  // }, [error, message, navigate]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch(clearError());
+    }
+    if (message) {
+      toast.success(message);
+      dispatch(clearMessage());
+      navigate("/profile");
+    }
+  }, [error, message, navigate, dispatch]);
 
   const [oldPassword, setOldPassword] = React.useState("");
   const [newPassword, setNewPassword] = React.useState("");

@@ -1,17 +1,27 @@
 import { Button, Container, Heading, Input, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import React from "react";
-import { useDispatch } from "react-redux";
-import { updateProfile } from "../../features/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { updateProfile } from "../../features/profileSlice";
+import { useNavigate } from "react-router-dom";
 
-const UpdateProfile = () => {
+import { getMyProfile } from "../../features/userSlice";
+
+const UpdateProfile = ({ user }) => {
   const dispatch = useDispatch();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+  const [name, setName] = useState(user.name);
+  const [email, setEmail] = useState(user.email);
+
+  const { isLoading } = useSelector((state) => state.profile);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(updateProfile(name, email));
+    await dispatch(updateProfile({ name, email }));
+    dispatch(getMyProfile());
+    navigate("/profile");
   };
+
   return (
     <Container minH={"95vh"} py={16}>
       <form onSubmit={handleSubmit}>
@@ -38,7 +48,13 @@ const UpdateProfile = () => {
             onChange={(e) => setEmail(e.target.value)}
             focusBorderColor="yellow.500"
           />
-          <Button w={"full"} mt={4} colorScheme={"yellow"} type="submit">
+          <Button
+            isLoading={isLoading}
+            w={"full"}
+            mt={4}
+            colorScheme={"yellow"}
+            type="submit"
+          >
             Change
           </Button>
         </VStack>
