@@ -77,7 +77,7 @@ const deleteFromPlaylist = createAsyncThunk(
   "user/deleteFromPlaylist",
   async (id, thunkAPI) => {
     try {
-      const { data } = await axios.delete(`/removefromplaylist/${id}`, {
+      const { data } = await axios.delete(`/removefromplaylist?id=${id}`, {
         withCredentials: true,
       });
       return data;

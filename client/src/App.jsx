@@ -57,7 +57,10 @@ function App() {
   }, [dispatch]);
 
   return isLoading ? (
-    <Loader />
+    <>
+      <Toaster />
+      <Loader />
+    </>
   ) : (
     <>
       <Router>

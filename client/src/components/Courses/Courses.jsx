@@ -19,6 +19,7 @@ import {
   getAllCourse,
 } from "../../features/coursesSlice";
 import toast from "react-hot-toast";
+import { getMyProfile } from "../../features/userSlice";
 
 const Course = ({
   title,
@@ -121,9 +122,9 @@ const Courses = () => {
     "Game Development",
   ];
 
-  const addToPlaylistHandler = (id) => {
-    console.log(id);
-    dispatch(addToPlaylist(id));
+  const addToPlaylistHandler = async (id) => {
+    await dispatch(addToPlaylist(id));
+    dispatch(getMyProfile());
   };
   return (
     <Container minH={"95vh"} maxW="container.lg" paddingY={"8"}>

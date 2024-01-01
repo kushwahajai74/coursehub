@@ -48,9 +48,10 @@ const Profile = ({ user }) => {
     }
   }, [error, message, dispatch]);
 
-  const removeFromPlaylistHandler = (e, id) => {
+  const removeFromPlaylistHandler = async (e, id) => {
     e.preventDefault();
-    dispatch(deleteFromPlaylist(id));
+    await dispatch(deleteFromPlaylist(id));
+    dispatch(getMyProfile());
   };
 
   const channgeImageSubmitHandler = async (e, image) => {
