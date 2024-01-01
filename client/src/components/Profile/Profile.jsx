@@ -29,7 +29,7 @@ import {
   updateProfilePicture,
 } from "../../features/profileSlice";
 import toast from "react-hot-toast";
-import { getMyProfile } from "../../features/userSlice";
+import { deleteFromPlaylist, getMyProfile } from "../../features/userSlice";
 
 const Profile = ({ user }) => {
   const dispatch = useDispatch();
@@ -48,8 +48,9 @@ const Profile = ({ user }) => {
     }
   }, [error, message, dispatch]);
 
-  const removeFromPlaylistHandler = (id) => {
-    console.log(id);
+  const removeFromPlaylistHandler = (e, id) => {
+    e.preventDefault();
+    dispatch(deleteFromPlaylist(id));
   };
 
   const channgeImageSubmitHandler = async (e, image) => {
@@ -127,7 +128,7 @@ const Profile = ({ user }) => {
               <Image
                 boxSize={"full"}
                 objectFit="contain"
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXVR5Yk775-DXTDk-8hsJhyx1G0p5_gpyK_ldRnwc8q49jraaSspfGRXK4pEi3Tw8cgyk&usqp=CAU"
+                src={element.poster}
               />
               <HStack>
                 <Link to={`/course/${element.course}`}>
@@ -137,7 +138,7 @@ const Profile = ({ user }) => {
                 </Link>
 
                 <Button
-                  onClick={() => removeFromPlaylistHandler(element.course)}
+                  onClick={(e) => removeFromPlaylistHandler(e, element.course)}
                 >
                   <RiDeleteBin7Fill />
                 </Button>

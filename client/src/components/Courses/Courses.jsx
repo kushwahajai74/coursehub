@@ -9,8 +9,16 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import {
+  addToPlaylist,
+  clearError,
+  clearMessage,
+  getAllCourse,
+} from "../../features/coursesSlice";
+import toast from "react-hot-toast";
 
 const Course = ({
   title,
@@ -18,8 +26,10 @@ const Course = ({
   id,
   addToPlaylistHandler,
   creator,
+  views,
   description,
   lectureCount,
+  isLoading,
 }) => {
   return (
     <VStack
@@ -28,7 +38,7 @@ const Course = ({
       padding={2}
       borderRadius={"lg"}
       borderColor={"gray.200"}
-      boxShadow={"md"}
+      boxShadow={"2xl"}
     >
       <Image src={imageSrc} boxSize="60" objectFit={"contain"} />
       <Heading
@@ -58,6 +68,7 @@ const Course = ({
         children={`Lectures - ${lectureCount}`}
         textTransform="uppercase"
       />
+      <Heading textAlign={"center"} size="xs" children={`Views - ${views}`} />
       <Stack direction={["column", "row"]} alignItems="center">
         <Link to={`/course/${id}`}>
           <Button colorScheme={"yellow"}>Watch Now</Button>
@@ -68,6 +79,7 @@ const Course = ({
           onClick={() => {
             addToPlaylistHandler(id);
           }}
+          isLoading={isLoading}
         >
           Add to playlist
         </Button>
@@ -77,8 +89,30 @@ const Course = ({
 };
 
 const Courses = () => {
+  const dispatch = useDispatch();
   const [keyword, setKeyword] = useState("");
-  const courses = [
+  const [category, setCategory] = useState("");
+
+  const { courses, error, isLoading, message } = useSelector(
+    (state) => state.courses
+  );
+
+  useEffect(() => {
+    dispatch(getAllCourse({ keyword, category }));
+  }, [keyword, category, dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch(clearError());
+    }
+    if (message) {
+      toast.success(message);
+      dispatch(clearMessage());
+    }
+  }, [dispatch, error, message]);
+
+  const coursesCategory = [
     "Web Development",
     "Data Structures & Algorithms",
     "Machine Learning",
@@ -86,8 +120,10 @@ const Courses = () => {
     "Artificial Inteligence",
     "Game Development",
   ];
+
   const addToPlaylistHandler = (id) => {
-    console.log("Added to playlist");
+    console.log(id);
+    dispatch(addToPlaylist(id));
   };
   return (
     <Container minH={"95vh"} maxW="container.lg" paddingY={"8"}>
@@ -113,9 +149,9 @@ const Courses = () => {
           },
         }}
       >
-        {courses.map((item, index) => (
-          <Link>
-            <Button key={index} onClick={() => setCategory(item)} minW={"60"}>
+        {coursesCategory.map((item, index) => (
+          <Link key={index}>
+            <Button onClick={() => setCategory(item)}>
               <Text children={item} />
             </Button>
           </Link>
@@ -127,60 +163,24 @@ const Courses = () => {
         justifyContent={["flex-start", "space-evenly"]}
         alignItems={["center", "flex-start"]}
       >
-        <Course
-          title="Sample"
-          imageSrc="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXVR5Yk775-DXTDk-8hsJhyx1G0p5_gpyK_ldRnwc8q49jraaSspfGRXK4pEi3Tw8cgyk&usqp=CAU"
-          creator="Sample"
-          description="Sample"
-          lectureCount="2"
-          addToPlaylistHandler={addToPlaylistHandler}
-          id="Sample"
-        />
-        <Course
-          title="Sample"
-          imageSrc="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXVR5Yk775-DXTDk-8hsJhyx1G0p5_gpyK_ldRnwc8q49jraaSspfGRXK4pEi3Tw8cgyk&usqp=CAU"
-          creator="Sample"
-          description="Sample"
-          lectureCount="2"
-          addToPlaylistHandler={addToPlaylistHandler}
-          id="Sample"
-        />
-        <Course
-          title="Sample"
-          imageSrc="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXVR5Yk775-DXTDk-8hsJhyx1G0p5_gpyK_ldRnwc8q49jraaSspfGRXK4pEi3Tw8cgyk&usqp=CAU"
-          creator="Sample"
-          description="Sample"
-          lectureCount="2"
-          addToPlaylistHandler={addToPlaylistHandler}
-          id="Sample"
-        />
-        <Course
-          title="Sample"
-          imageSrc="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXVR5Yk775-DXTDk-8hsJhyx1G0p5_gpyK_ldRnwc8q49jraaSspfGRXK4pEi3Tw8cgyk&usqp=CAU"
-          creator="Sample"
-          description="Sample"
-          lectureCount="2"
-          addToPlaylistHandler={addToPlaylistHandler}
-          id="Sample"
-        />
-        <Course
-          title="Sample"
-          imageSrc="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXVR5Yk775-DXTDk-8hsJhyx1G0p5_gpyK_ldRnwc8q49jraaSspfGRXK4pEi3Tw8cgyk&usqp=CAU"
-          creator="Sample"
-          description="Sample"
-          lectureCount="2"
-          addToPlaylistHandler={addToPlaylistHandler}
-          id="Sample"
-        />
-        <Course
-          title="Sample"
-          imageSrc="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXVR5Yk775-DXTDk-8hsJhyx1G0p5_gpyK_ldRnwc8q49jraaSspfGRXK4pEi3Tw8cgyk&usqp=CAU"
-          creator="Sample"
-          description="Sample"
-          lectureCount="2"
-          addToPlaylistHandler={addToPlaylistHandler}
-          id="Sample"
-        />
+        {courses.length > 0 ? (
+          courses.map((course) => (
+            <Course
+              key={course._id}
+              title={course.title}
+              imageSrc={course.poster.url}
+              creator={course.createdBy}
+              description={course.description}
+              lectureCount={course.numberOfVideos}
+              addToPlaylistHandler={addToPlaylistHandler}
+              id={course._id}
+              views={course.views}
+              isLoading={isLoading}
+            />
+          ))
+        ) : (
+          <Heading opacity={0.5} mt={4} children="Course Not Found" />
+        )}
       </Stack>
     </Container>
   );

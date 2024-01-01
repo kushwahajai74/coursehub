@@ -264,7 +264,7 @@ export const removeFromPlaylist = catchAsyncError(async (req, res, next) => {
   const user = await User.findById(req.user._id);
 
   // const course = req.body.course;
-  const course = await Course.findById(req.body.id);
+  const course = await Course.findById(req.query.id);
   if (!course) return next(new ErrorHandler("Course not found", 404));
 
   const newPlaylist = user.playlist.filter((item) => {

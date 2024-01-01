@@ -73,6 +73,21 @@ const logout = createAsyncThunk("user/logout", async (params, thunkAPI) => {
     );
   }
 });
+const deleteFromPlaylist = createAsyncThunk(
+  "user/deleteFromPlaylist",
+  async (id, thunkAPI) => {
+    try {
+      const { data } = await axios.delete(`/removefromplaylist/${id}`, {
+        withCredentials: true,
+      });
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response.data ? error.response.data : error.message
+      );
+    }
+  }
+);
 
 const userSlice = createSlice({
   name: "user",
@@ -133,11 +148,22 @@ const userSlice = createSlice({
         state.isLoading = false;
         state.isAuthenticated = false;
         state.error = action.payload.message;
+      })
+      .addCase(deleteFromPlaylist.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteFromPlaylist.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.message = action.payload.message;
+      })
+      .addCase(deleteFromPlaylist.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
       });
   },
 });
 
-export { login, getMyProfile, logout, register };
+export { login, getMyProfile, logout, register, deleteFromPlaylist };
 export const { clearError, clearMessage } = userSlice.actions;
 
 export default userSlice.reducer;
