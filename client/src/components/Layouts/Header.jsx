@@ -7,16 +7,22 @@ import {
   DrawerBody,
   DrawerCloseButton,
   DrawerContent,
-  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   HStack,
+  Heading,
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
 import { RiDashboardFill, RiLogoutBoxLine, RiMenu5Fill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { logout } from "../../features/userSlice";
+import { FaBookReader } from "react-icons/fa";
+import { HiOutlineHome } from "react-icons/hi2";
+import { TbBooks } from "react-icons/tb";
+import { BiBookAdd } from "react-icons/bi";
+import { HiOutlineChatBubbleOvalLeftEllipsis } from "react-icons/hi2";
+import { HiMiniBars3BottomLeft } from "react-icons/hi2";
 
 const LinkButton = ({ url, title, onClose }) => (
   <Link onClick={onClose} to={url}>
@@ -51,23 +57,48 @@ const Header = ({ isAuthenticated = false, user }) => {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader borderBottomWidth={1}>COURSE BUNDLER</DrawerHeader>
+          <DrawerHeader borderBottomWidth={1}>
+            <HStack>
+              <Heading size={"lg"}>Coursehub</Heading>
+              <FaBookReader size={30} />
+            </HStack>
+          </DrawerHeader>
 
           <DrawerBody>
             <VStack spacing={4} alignItems={"flex-start"}>
-              <LinkButton onClose={onClose} url="/" title="Home" />
-              <LinkButton
-                onClose={onClose}
-                url="/courses"
-                title="Browse All Courses"
-              />
-              <LinkButton
-                onClose={onClose}
-                url="/request"
-                title="Request a Course"
-              />
-              <LinkButton onClose={onClose} url="/contact" title="Contact Us" />
-              <LinkButton onClose={onClose} url="/about" title="About" />
+              <HStack>
+                <HiOutlineHome size={30} />
+                <LinkButton onClose={onClose} url="/" title="Home" />
+              </HStack>
+              <HStack>
+                <TbBooks size={30} />
+                <LinkButton
+                  onClose={onClose}
+                  url="/courses"
+                  title="Browse All Courses"
+                />
+              </HStack>
+              <HStack>
+                <BiBookAdd size={30} />
+                <LinkButton
+                  onClose={onClose}
+                  url="/request"
+                  title="Request a Course"
+                />
+              </HStack>
+
+              <HStack>
+                <HiOutlineChatBubbleOvalLeftEllipsis size={30} />
+                <LinkButton
+                  onClose={onClose}
+                  url="/contact"
+                  title="Contact Us"
+                />
+              </HStack>
+              <HStack>
+                <HiMiniBars3BottomLeft size={30} />
+                <LinkButton onClose={onClose} url="/about" title="About" />
+              </HStack>
             </VStack>
             <HStack
               justifyContent={"space-evenly"}

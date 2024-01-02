@@ -12,6 +12,6 @@ const router = express.Router();
 router.route("/subscribe").get(isAuthenticated, buySubscription);
 router.route("/paymentverification").post(isAuthenticated, paymentVerification);
 router.route("/razorpaykey").get(isAuthenticated, getRazorpayKey);
-router.route("/").get(isAuthenticated, cancelSubscription);
+router.route("/cancelsubscription").get(isAuthenticated, cancelSubscription);
 
 export default router;
