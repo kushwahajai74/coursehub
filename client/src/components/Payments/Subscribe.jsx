@@ -32,32 +32,30 @@ const Subscribe = ({ user }) => {
       toast.error(error);
       dispatch(clearError());
     }
-    if (subscriptionId) {
-      const openPopup = async () => {
-        const options = {
-          key,
-          subscription_id: subscriptionId,
-          name: "Coursehub",
-          description: "Get access to premium content on Coursehub",
-          image: logo,
-          callback_url: "http://localhost:3000/api/v1/paymentverification",
-          redirect: false,
-          prefill: {
-            name: user.name,
-            email: user.email,
-          },
-          notes: {
-            address: "Coursehub Corporate Office",
-          },
-          theme: {
-            color: "#FFC800",
-          },
-        };
-        const razor = new window.Razorpay(options);
-        razor.open();
+    const openPopup = async () => {
+      const options = {
+        key,
+        subscription_id: subscriptionId,
+        name: "Coursehub",
+        description: "Get access to premium content on Coursehub",
+        image: logo,
+        callback_url: "http://localhost:3000/api/v1/paymentverification",
+        prefill: {
+          name: user.name,
+          email: user.email,
+          method: "upi",
+        },
+        notes: {
+          address: "Coursehub Corporate Office",
+        },
+        theme: {
+          color: "#FFC800",
+        },
       };
-      openPopup();
-    }
+      const razor = new window.Razorpay(options);
+      razor.open();
+    };
+    openPopup();
   }, [error, subscriptionId, user.name, user.email, key]);
 
   return (
