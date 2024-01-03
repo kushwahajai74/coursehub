@@ -30,6 +30,11 @@ import {
 } from "../../features/profileSlice";
 import toast from "react-hot-toast";
 import { deleteFromPlaylist, getMyProfile } from "../../features/userSlice";
+import {
+  cancelSubscription,
+  clearError as subscriptionClearError,
+  clearMessage as subscriptionClearMessage,
+} from "../../features/paymentSlice";
 
 const Profile = ({ user }) => {
   const dispatch = useDispatch();
@@ -37,6 +42,11 @@ const Profile = ({ user }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { isLoading, error, message } = useSelector((state) => state.profile);
+  const {
+    isLoading: subscriptionLoading,
+    error: subscriptionError,
+    message: subscriptionMessage,
+  } = useSelector((state) => state.payment);
   useEffect(() => {
     if (error) {
       toast.error(error);
@@ -46,11 +56,24 @@ const Profile = ({ user }) => {
       toast.success(message);
       dispatch(clearMessage());
     }
-  }, [error, message, dispatch]);
+    if (subscriptionError) {
+      toast.error(subscriptionError);
+      dispatch(subscriptionClearError());
+    }
+    if (subscriptionMessage) {
+      toast.success(subscriptionMessage);
+      dispatch(subscriptionClearMessage());
+    }
+  }, [error, message, dispatch, subscriptionError, subscriptionMessage]);
 
   const removeFromPlaylistHandler = async (e, id) => {
     e.preventDefault();
     await dispatch(deleteFromPlaylist(id));
+    dispatch(getMyProfile());
+  };
+  const subscriptionCancelHandler = async (e) => {
+    e.preventDefault();
+    await dispatch(cancelSubscription());
     dispatch(getMyProfile());
   };
 
@@ -95,7 +118,12 @@ const Profile = ({ user }) => {
             <HStack>
               <Text children="Subscription:" fontWeight={"bold"} />
               {user.subscription && user.subscription.status === "active" ? (
-                <Button color={"yellow.500"} variant="unstyled">
+                <Button
+                  color={"yellow.500"}
+                  variant="unstyled"
+                  isLoading={subscriptionLoading}
+                  onClick={subscriptionCancelHandler}
+                >
                   Cancel Subscription
                 </Button>
               ) : (

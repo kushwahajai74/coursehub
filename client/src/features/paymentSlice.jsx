@@ -21,6 +21,19 @@ const buySubscription = createAsyncThunk(
     }
   }
 );
+const cancelSubscription = createAsyncThunk(
+  "payment/cancelSubscription",
+  async (params, thunkAPI) => {
+    try {
+      const { data } = await axios.get("/cancelsubscription");
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response.data ? error.response.data : error.message
+      );
+    }
+  }
+);
 
 const paymentSlice = createSlice({
   name: "payment",
@@ -45,11 +58,22 @@ const paymentSlice = createSlice({
       .addCase(buySubscription.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
+      })
+      .addCase(cancelSubscription.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(cancelSubscription.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.message = action.payload.message;
+      })
+      .addCase(cancelSubscription.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
       });
   },
 });
 
-export { buySubscription };
+export { buySubscription, cancelSubscription };
 
 export const { clearError, clearMessage } = paymentSlice.actions;
 export default paymentSlice.reducer;
