@@ -3,6 +3,7 @@ import axios from "axios";
 
 const initialState = {
   courses: [],
+  lectures: [],
   isLoading: false,
   error: null,
   message: null,
@@ -51,6 +52,22 @@ const addToPlaylist = createAsyncThunk(
   }
 );
 
+const getCourseLectures = createAsyncThunk(
+  "course/getCourseLectures",
+  async (courseId, thunkAPI) => {
+    try {
+      const { data } = await axios.get(`/courses/${courseId}`);
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
+    }
+  }
+);
+
 const coursesSlice = createSlice({
   name: "courses",
   initialState,
@@ -85,10 +102,21 @@ const coursesSlice = createSlice({
       .addCase(addToPlaylist.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
+      })
+      .addCase(getCourseLectures.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getCourseLectures.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.lectures = action.payload.lectures;
+      })
+      .addCase(getCourseLectures.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
       });
   },
 });
-export { getAllCourse, addToPlaylist };
+export { getAllCourse, addToPlaylist, getCourseLectures };
 
 export const { clearError, clearMessage } = coursesSlice.actions;
 

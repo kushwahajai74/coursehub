@@ -46,7 +46,7 @@ export const createCourse = catchAsyncError(async (req, res, next) => {
   });
   res.status(200).json({
     success: true,
-    course,
+    message: "Course created successfully",
   });
 });
 export const getCourseLectures = catchAsyncError(async (req, res, next) => {

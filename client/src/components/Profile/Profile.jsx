@@ -61,7 +61,7 @@ const Profile = ({ user }) => {
       dispatch(subscriptionClearError());
     }
     if (subscriptionMessage) {
-      toast.success(subscriptionMessage);
+      toast.success(subscriptionMessage, { duration: 10000 });
       dispatch(subscriptionClearMessage());
     }
   }, [error, message, dispatch, subscriptionError, subscriptionMessage]);

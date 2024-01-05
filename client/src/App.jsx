@@ -136,13 +136,20 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="/paymentsuccess" element={<PaymentSuccess />} />
+            <Route
+              path="/paymentsuccess"
+              element={
+                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <PaymentSuccess />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/paymentfail" element={<PaymentFail />} />
             <Route
               path="/course/:id"
               element={
                 <ProtectedRoute isAuthenticated={isAuthenticated}>
-                  <CoursePage />
+                  <CoursePage user={user} />
                 </ProtectedRoute>
               }
             />

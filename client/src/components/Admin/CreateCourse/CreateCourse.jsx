@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../Sidebar";
 import {
   Box,
@@ -14,8 +14,16 @@ import {
 } from "@chakra-ui/react";
 import cursor from "../../../assets/images/cursor.png";
 import { fileExportCss } from "../../Auth/Register";
+import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import {
+  clearError,
+  clearMessage,
+  createCourse,
+} from "../../../features/adminSlice";
 
 const CreateCourse = () => {
+  const dispatch = useDispatch();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [createdBy, setCreatedBy] = useState("");
@@ -43,6 +51,32 @@ const CreateCourse = () => {
     "Artificial Inteligence",
     "Game Development",
   ];
+
+  const { error, message, isLoading } = useSelector((state) => state.admin);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch(clearError());
+    }
+    if (message) {
+      toast.success(message);
+      dispatch(clearMessage());
+    }
+  }, [error, message]);
+
+  const createCourseHandler = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("createdBy", createdBy);
+    formData.append("category", category);
+    formData.append("file", image);
+
+    dispatch(createCourse(formData));
+  };
+
   return (
     <Grid
       minH={"100vh"}
@@ -50,7 +84,7 @@ const CreateCourse = () => {
       css={{ cursor: `url(${cursor}), default` }}
     >
       <Container py={16}>
-        <form>
+        <form onSubmit={createCourseHandler}>
           <Heading
             children="Create Course"
             my={8}

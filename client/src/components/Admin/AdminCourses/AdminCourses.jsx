@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Sidebar from "../Sidebar";
 import {
   Box,
@@ -20,6 +20,8 @@ import {
 import cursor from "../../../assets/images/cursor.png";
 import { RiDeleteBin7Fill } from "react-icons/ri";
 import CourseModal from "./CourseModal";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllCourse } from "../../../features/coursesSlice";
 const Row = ({ item, courseDetailsHandler, deleteCourseHandler }) => {
   return (
     <Tr>
@@ -54,20 +56,17 @@ const Row = ({ item, courseDetailsHandler, deleteCourseHandler }) => {
 };
 
 const AdminCourses = () => {
+  const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const users = [
-    {
-      _id: "sddfsfsdfsdf",
-      title: "React Course",
-      category: "Web Development",
-      poster: {
-        url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXVR5Yk775-DXTDk-8hsJhyx1G0p5_gpyK_ldRnwc8q49jraaSspfGRXK4pEi3Tw8cgyk&usqp=CAU",
-      },
-      createdBy: "Jai Kushwaha",
-      views: "123",
-      numOfVideos: "3",
-    },
-  ];
+  const { courses, error } = useSelector((state) => state.courses);
+
+  useState(() => {
+    if (error) {
+      toast.error(error);
+      dispatch(clearError());
+    }
+    dispatch(getAllCourse());
+  }, [error]);
   const courseDetailsHandler = (id) => {
     onOpen();
   };
@@ -111,7 +110,7 @@ const AdminCourses = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {users.map((item) => (
+              {courses?.map((item) => (
                 <Row
                   item={item}
                   key={item._id}

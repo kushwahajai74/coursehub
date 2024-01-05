@@ -8,18 +8,26 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { buySubscription, clearError } from "../../features/paymentSlice";
+import {
+  buySubscription,
+  clearError,
+  verifyPayment,
+} from "../../features/paymentSlice";
 import toast from "react-hot-toast";
 import axios from "axios";
 import logo from "../../assets/images/logo.webp";
+import { useNavigate } from "react-router-dom";
+import { clearError as courseClearError } from "../../features/coursesSlice";
 
 const Subscribe = ({ user }) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [key, setKey] = useState(null);
 
   const { error, isLoading, subscriptionId } = useSelector(
     (state) => state.payment
   );
+  const { error: courseError } = useSelector((state) => state.courses);
 
   const subscribeHandler = async () => {
     const { data } = await axios.get("/razorpaykey");
@@ -30,33 +38,53 @@ const Subscribe = ({ user }) => {
   useEffect(() => {
     if (error) {
       toast.error(error);
-      dispatch(clearError());
+      dispatch();
     }
-    const openPopup = async () => {
-      const options = {
-        key,
-        subscription_id: subscriptionId,
-        name: "Coursehub",
-        description: "Get access to premium content on Coursehub",
-        image: logo,
-        callback_url: "http://localhost:3000/api/v1/paymentverification",
-        prefill: {
-          name: user.name,
-          email: user.email,
-          method: "upi",
-        },
-        notes: {
-          address: "Coursehub Corporate Office",
-        },
-        theme: {
-          color: "#FFC800",
-        },
+    if (subscriptionId) {
+      const openPopup = () => {
+        const options = {
+          key,
+          subscription_id: subscriptionId,
+          name: "Coursehub",
+          description: "Get access to premium content on Coursehub",
+          image: logo,
+          handler: function (response) {
+            const razorpay_payment_id = response.razorpay_payment_id;
+            const razorpay_subscription_id = response.razorpay_subscription_id;
+            const razorpay_signature = response.razorpay_signature;
+
+            // This function will be called after a successful payment
+            dispatch(
+              verifyPayment({
+                razorpay_payment_id,
+                razorpay_subscription_id,
+                razorpay_signature,
+              })
+            );
+            navigate(`/paymentsuccess?reference=${razorpay_payment_id}`);
+          },
+          prefill: {
+            name: user.name,
+            email: user.email,
+            method: "upi",
+          },
+          notes: {
+            address: "Coursehub Corporate Office",
+          },
+          theme: {
+            color: "#FFC800",
+          },
+        };
+        const razor = new window.Razorpay(options);
+        razor.open();
       };
-      const razor = new window.Razorpay(options);
-      razor.open();
-    };
-    openPopup();
-  }, [error, subscriptionId, user.name, user.email, key]);
+      openPopup();
+    }
+    if (courseError) {
+      toast.error(courseError);
+      dispatch(courseClearError());
+    }
+  }, [error, subscriptionId, user.name, user.email, key, courseError]);
 
   return (
     <Container h={"90vh"} p={"16"}>

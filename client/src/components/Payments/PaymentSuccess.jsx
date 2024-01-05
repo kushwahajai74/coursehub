@@ -38,9 +38,9 @@ const PaymentSuccess = () => {
             </Heading>
           </VStack>
         </Box>
-        <Link to={"/profile"}>
+        <a href={"/profile"}>
           <Button children="Go to Profile" colorScheme="yellow" />
-        </Link>
+        </a>
         <Heading size={"sm"} children={`Refrence: ${reference}`} />
       </VStack>
     </Container>

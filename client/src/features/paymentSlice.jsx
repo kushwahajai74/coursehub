@@ -34,6 +34,24 @@ const cancelSubscription = createAsyncThunk(
     }
   }
 );
+const verifyPayment = createAsyncThunk(
+  "payment/verifyPayment",
+  async (params, thunkAPI) => {
+    try {
+      const { data } = await axios.post("/paymentverification", params, {
+        headers: {
+          "Content-type": "application/json",
+        },
+        withCredentials: true,
+      });
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response.data ? error.response.data : error.message
+      );
+    }
+  }
+);
 
 const paymentSlice = createSlice({
   name: "payment",
@@ -73,7 +91,7 @@ const paymentSlice = createSlice({
   },
 });
 
-export { buySubscription, cancelSubscription };
+export { buySubscription, cancelSubscription, verifyPayment };
 
 export const { clearError, clearMessage } = paymentSlice.actions;
 export default paymentSlice.reducer;

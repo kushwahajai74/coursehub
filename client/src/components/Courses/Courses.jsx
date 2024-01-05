@@ -40,8 +40,11 @@ const Course = ({
       borderRadius={"lg"}
       borderColor={"gray.200"}
       boxShadow={"2xl"}
+      width={"300px"}
+      height={"450px"}
+      justifyContent={"space-between"}
     >
-      <Image src={imageSrc} boxSize="60" objectFit={"contain"} />
+      <Image src={imageSrc} boxSize="60" objectFit={"contain"} mx={"auto"} />
       <Heading
         textAlign={["center", "left"]}
         maxW="200px"
@@ -50,7 +53,11 @@ const Course = ({
         noOfLines={3}
         children={title}
       />
-      <Text noOfLines={2} children={description} />
+      <Text
+        noOfLines={2}
+        children={description}
+        textAlign={["center", "left"]}
+      />
       <HStack>
         <Text
           fontWeight={"bold"}
