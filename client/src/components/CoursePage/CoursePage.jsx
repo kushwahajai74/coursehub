@@ -56,7 +56,7 @@ const CoursePage = ({ user }) => {
 
   return isLoading ? (
     <Loader />
-  ) : (
+  ) : lectures.length > 0 ? (
     <Grid minH={"90vh"} templateColumns={["1fr", "3fr 1fr"]}>
       <Box>
         <video
@@ -99,6 +99,16 @@ const CoursePage = ({ user }) => {
           ))}
       </VStack>
     </Grid>
+  ) : (
+    <Box
+      height={"90vh"}
+      w={"100vw"}
+      display={"flex"}
+      justifyContent={"center"}
+      alignItems={"center"}
+    >
+      <Heading children="Lectures will Arrive soon" />
+    </Box>
   );
 };
 

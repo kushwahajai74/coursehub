@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  FormLabel,
   Grid,
   Heading,
   Input,
@@ -28,6 +27,7 @@ const CourseModal = ({
   deleteLecturesHandler,
   addLectureHandler,
   lectures = [],
+  isLoading,
 }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -69,16 +69,21 @@ const CourseModal = ({
                   <Heading children={`${id}`} size="sm" opacity={0.4} />
                 </Box>
                 <Heading children={"Lectures"} size="lg" />
-                <VideoCard
-                  title={"React Intro"}
-                  description={
-                    "This is a intro lecture, where you will know the basics of react"
-                  }
-                  num={1}
-                  lectureId={"dsadasdaslecturesdsdf"}
-                  courseId={id}
-                  deleteLecturesHandler={deleteLecturesHandler}
-                />
+                {lectures.length > 0 ? (
+                  lectures?.map((item, index) => (
+                    <VideoCard
+                      title={item.title}
+                      description={item.description}
+                      num={index + 1}
+                      lectureId={item._id}
+                      courseId={id}
+                      deleteLecturesHandler={deleteLecturesHandler}
+                      isLoading={isLoading}
+                    />
+                  ))
+                ) : (
+                  <Text children="Lectures will arrive soon" />
+                )}
               </Box>
               <Box>
                 <form
@@ -128,7 +133,11 @@ const CourseModal = ({
                         disableRemotePlayback
                       />
                     )}
-                    <Button type="submit" colorScheme="purple">
+                    <Button
+                      type="submit"
+                      colorScheme="purple"
+                      isLoading={isLoading}
+                    >
                       Submit
                     </Button>
                   </VStack>
@@ -157,6 +166,7 @@ function VideoCard({
   lectureId,
   courseId,
   deleteLecturesHandler,
+  isLoading,
 }) {
   return (
     <Stack
@@ -174,6 +184,7 @@ function VideoCard({
       <Button
         color={"purple.600"}
         onClick={() => deleteLecturesHandler(courseId, lectureId)}
+        isLoading={isLoading}
       >
         <RiDeleteBin7Fill />
       </Button>

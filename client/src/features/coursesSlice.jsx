@@ -13,10 +13,10 @@ const getAllCourse = createAsyncThunk(
   async (params, thunkAPI) => {
     const { keyword, category } = params;
     try {
-      const { data } = await axios.get(
+      const response = await axios.get(
         `/courses?keyword=${keyword}&category=${category}`
       );
-      return data;
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response.data.message

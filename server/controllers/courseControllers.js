@@ -90,7 +90,7 @@ export const addLectures = catchAsyncError(async (req, res, next) => {
     },
   });
 
-  course.numOfVideos = course.lectures.length;
+  course.numberOfVideos = course.lectures.length;
   await course.save();
 
   res.status(200).json({

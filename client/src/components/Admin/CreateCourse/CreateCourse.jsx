@@ -21,8 +21,10 @@ import {
   clearMessage,
   createCourse,
 } from "../../../features/adminSlice";
+import { useNavigate } from "react-router-dom";
 
 const CreateCourse = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -62,6 +64,7 @@ const CreateCourse = () => {
     if (message) {
       toast.success(message);
       dispatch(clearMessage());
+      navigate("/admin/courses");
     }
   }, [error, message]);
 
@@ -144,7 +147,12 @@ const CreateCourse = () => {
                 objectFit={"contain"}
               />
             )}
-            <Button w={"full"} colorScheme="purple" type="submit">
+            <Button
+              w={"full"}
+              colorScheme="purple"
+              type="submit"
+              isLoading={isLoading}
+            >
               Create
             </Button>
           </VStack>

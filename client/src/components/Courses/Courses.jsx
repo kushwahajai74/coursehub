@@ -41,7 +41,7 @@ const Course = ({
       borderColor={"gray.200"}
       boxShadow={"2xl"}
       width={"300px"}
-      height={"450px"}
+      height={"500px"}
       justifyContent={"space-between"}
     >
       <Image src={imageSrc} boxSize="60" objectFit={"contain"} mx={"auto"} />

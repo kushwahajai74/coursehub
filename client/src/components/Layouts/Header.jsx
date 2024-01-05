@@ -57,11 +57,13 @@ const Header = ({ isAuthenticated = false, user }) => {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader borderBottomWidth={1}>
-            <HStack>
-              <Heading size={"lg"}>Coursehub</Heading>
-              <FaBookReader size={30} />
-            </HStack>
+          <DrawerHeader borderBottomWidth={1} onClick={onClose}>
+            <Link to="/">
+              <HStack>
+                <Heading size={"lg"}>Coursehub</Heading>
+                <FaBookReader size={30} />
+              </HStack>{" "}
+            </Link>
           </DrawerHeader>
 
           <DrawerBody>
