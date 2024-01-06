@@ -72,6 +72,7 @@ const CourseModal = ({
                 {lectures.length > 0 ? (
                   lectures?.map((item, index) => (
                     <VideoCard
+                      key={item._id}
                       title={item.title}
                       description={item.description}
                       num={index + 1}

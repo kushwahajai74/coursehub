@@ -6,6 +6,7 @@ const initialState = {
   error: null,
   message: null,
   courses: [],
+  users: [],
 };
 
 const createCourse = createAsyncThunk(
@@ -79,6 +80,73 @@ const addLectures = createAsyncThunk(
     }
   }
 );
+const deleteLectures = createAsyncThunk(
+  "admin/deleteLectures",
+  async (params, thunkAPI) => {
+    try {
+      const { courseId, lectureId } = params;
+      const { data } = await axios.delete(
+        `/lectures?courseId=${courseId}&lectureId=${lectureId}`
+      );
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
+    }
+  }
+);
+
+const getAllUsers = createAsyncThunk(
+  "admin/getAllUsers",
+  async (params, thunkAPI) => {
+    try {
+      const { data } = await axios.get(`/admin/users`);
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
+    }
+  }
+);
+
+const updateUserRole = createAsyncThunk(
+  "admin/updateUserRole",
+  async (id, thunkAPI) => {
+    try {
+      const { data } = await axios.put(`/admin/users/${id}`, {
+        withCredentials: "true",
+      });
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
+    }
+  }
+);
+const deleteUser = createAsyncThunk(
+  "admin/deleteUser",
+  async (id, thunkAPI) => {
+    try {
+      const { data } = await axios.delete(`/admin/users/${id}`);
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
+    }
+  }
+);
 
 const adminSlice = createSlice({
   initialState,
@@ -136,11 +204,64 @@ const adminSlice = createSlice({
       .addCase(addLectures.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
+      })
+      .addCase(deleteLectures.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteLectures.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.message = action.payload.message;
+      })
+      .addCase(deleteLectures.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(getAllUsers.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getAllUsers.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.users = action.payload.users;
+      })
+      .addCase(getAllUsers.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(updateUserRole.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateUserRole.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.message = action.payload.message;
+      })
+      .addCase(updateUserRole.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(deleteUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.message = action.payload.message;
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
       });
   },
 });
 
-export { createCourse, getAllCourse, deleteCourse, addLectures };
+export {
+  createCourse,
+  getAllCourse,
+  deleteCourse,
+  addLectures,
+  deleteLectures,
+  updateUserRole,
+  getAllUsers,
+  deleteUser,
+};
 
 export const { clearError, clearMessage } = adminSlice.actions;
 

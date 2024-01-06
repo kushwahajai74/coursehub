@@ -137,7 +137,7 @@ export const deleteLectures = catchAsyncError(async (req, res, next) => {
     (item) => item._id.toString() !== lectureId.toString()
   );
 
-  course.numOfVideos = course.lectures.length;
+  course.numberOfVideos = course.lectures.length;
 
   await course.save();
 

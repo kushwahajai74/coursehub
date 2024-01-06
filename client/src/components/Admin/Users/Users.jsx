@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Sidebar from "../Sidebar";
 import {
   Box,
@@ -17,25 +17,39 @@ import {
 } from "@chakra-ui/react";
 import cursor from "../../../assets/images/cursor.png";
 import { RiDeleteBin2Fill } from "react-icons/ri";
-const Row = ({ item, updateHandler, deleteUserHandler }) => {
+import {
+  clearError,
+  clearMessage,
+  deleteUser,
+  getAllUsers,
+  updateUserRole,
+} from "../../../features/adminSlice";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+
+const Row = ({ item, updateHandler, deleteUserHandler, isLoading }) => {
   return (
     <Tr>
       <Td>#{item._id}</Td>
       <Td>{item.name}</Td>
       <Td>{item.email}</Td>
       <Td>{item.role}</Td>
-      <Td>{item.subscription.status === "active" ? "Active" : "Not Avtive"}</Td>
+      <Td>
+        {item.subscription?.status === "active" ? "Active" : "Not Active"}
+      </Td>
       <Td isNumeric>
         <HStack justifyContent={"flex-end"}>
           <Button
             variant={"outline"}
             color={"purple.500"}
             onClick={() => updateHandler(item._id)}
+            isLoading={isLoading}
           >
             Change Role
           </Button>
           <Button
             color={"purple.600"}
+            isLoading={isLoading}
             onClick={() => deleteUserHandler(item._id)}
           >
             <RiDeleteBin2Fill />
@@ -47,22 +61,28 @@ const Row = ({ item, updateHandler, deleteUserHandler }) => {
 };
 
 const Users = () => {
-  const users = [
-    {
-      _id: "sddfsfsdfsdf",
-      name: "John Doe",
-      email: "john@email.com",
-      role: "admin",
-      subscription: {
-        status: "active",
-      },
-    },
-  ];
+  const dispatch = useDispatch();
+  const { error, message, isLoading, users } = useSelector(
+    (state) => state.admin
+  );
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch(clearError());
+    }
+    if (message) {
+      toast.success(message);
+      dispatch(clearMessage());
+    }
+    dispatch(getAllUsers());
+  }, [error, message]);
+
   const updateHandler = (id) => {
-    console.log(id);
+    dispatch(updateUserRole(id));
   };
   const deleteUserHandler = (id) => {
-    console.log(id);
+    dispatch(deleteUser(id));
   };
   return (
     <Grid
@@ -92,14 +112,16 @@ const Users = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {users.map((item) => (
-                <Row
-                  item={item}
-                  key={item._id}
-                  updateHandler={updateHandler}
-                  deleteUserHandler={deleteUserHandler}
-                />
-              ))}
+              {users.length > 0 &&
+                users.map((item) => (
+                  <Row
+                    item={item}
+                    key={item._id}
+                    updateHandler={() => updateHandler(item._id)}
+                    deleteUserHandler={() => deleteUserHandler(item._id)}
+                    isLoading={isLoading}
+                  />
+                ))}
             </Tbody>
           </Table>
         </TableContainer>

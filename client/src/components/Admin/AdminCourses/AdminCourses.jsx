@@ -29,8 +29,10 @@ import {
 } from "../../../features/coursesSlice";
 import {
   addLectures,
+  clearError,
   clearMessage,
   deleteCourse,
+  deleteLectures,
 } from "../../../features/adminSlice";
 const Row = ({
   item,
@@ -102,8 +104,9 @@ const AdminCourses = () => {
   const deleteCourseHandler = (id) => {
     dispatch(deleteCourse(id));
   };
-  const deleteLecturesHandler = (courseId, lectureId) => {
-    console.log(courseId, lectureId);
+  const deleteLecturesHandler = async (courseId, lectureId) => {
+    await dispatch(deleteLectures({ courseId, lectureId }));
+    dispatch(getCourseLectures(courseId));
   };
   const addLectureHandler = async (e, courseId, title, description, video) => {
     e.preventDefault();
