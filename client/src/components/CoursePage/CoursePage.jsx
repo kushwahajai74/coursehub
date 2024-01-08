@@ -1,5 +1,5 @@
 import { Box, Button, Grid, Heading, Text, VStack } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import introVideo from "../../assets/videos/intro.mp4";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -50,9 +50,18 @@ const CoursePage = ({ user }) => {
       user.subscription.status !== "active"
     )
       navigate("/subscribe");
-
+    console.log("working");
     dispatch(getCourseLectures(params.id));
   }, [params.id, dispatch]);
+
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.load();
+      videoRef.current.play();
+    }
+  }, [lecNumber]);
 
   return isLoading ? (
     <Loader />
@@ -60,6 +69,7 @@ const CoursePage = ({ user }) => {
     <Grid minH={"90vh"} templateColumns={["1fr", "3fr 1fr"]}>
       <Box>
         <video
+          ref={videoRef}
           width="95%"
           controls
           controlsList="nodownload"

@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Container,
+  HStack,
   Heading,
   Text,
   VStack,
@@ -48,6 +49,7 @@ const Subscribe = ({ user }) => {
           name: "Coursehub",
           description: "Get access to premium content on Coursehub",
           image: logo,
+          currency: "USD",
           handler: function (response) {
             const razorpay_payment_id = response.razorpay_payment_id;
             const razorpay_subscription_id = response.razorpay_subscription_id;
@@ -87,7 +89,7 @@ const Subscribe = ({ user }) => {
   }, [error, subscriptionId, user.name, user.email, key, courseError]);
 
   return (
-    <Container h={"90vh"} p={"16"}>
+    <Container h={"90vh"} px={"12"}>
       <Heading
         textAlign={"center"}
         children={"Welcome"}
@@ -135,6 +137,20 @@ const Subscribe = ({ user }) => {
           <Text color={"white"} children={"*Terms & Conditions apply"} />
         </Box>
       </VStack>
+
+      <Heading
+        children={"Note"}
+        my={"3"}
+        textAlign={"center"}
+        textDecoration={"underline"}
+      />
+      <Text
+        children={
+          "Please use the following card number to process test transaction seemlessly."
+        }
+      />
+      <Text children={"* 5267 3181 8797 5449"} />
+      <Text children={"* Use any CVV and future expiry date"} />
     </Container>
   );
 };
