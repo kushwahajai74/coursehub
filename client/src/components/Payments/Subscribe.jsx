@@ -37,6 +37,12 @@ const Subscribe = ({ user }) => {
   };
 
   useEffect(() => {
+    if (
+      user?.subscription !== "undefined" &&
+      user?.subscription?.status === "active"
+    )
+      navigate("/courses");
+
     if (error) {
       toast.error(error);
       dispatch();

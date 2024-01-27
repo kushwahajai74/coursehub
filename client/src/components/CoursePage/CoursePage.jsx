@@ -45,12 +45,10 @@ const CoursePage = ({ user }) => {
 
   useEffect(() => {
     if (
-      user.role !== "admin" &&
-      user.subscription !== undefined &&
+      (user.role !== "admin" && user.subscription === undefined) ||
       user.subscription.status !== "active"
     )
       navigate("/subscribe");
-    console.log("working");
     dispatch(getCourseLectures(params.id));
   }, [params.id, dispatch]);
 
